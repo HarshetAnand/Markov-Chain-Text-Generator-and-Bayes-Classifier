@@ -22,10 +22,10 @@ A from-scratch NLP project implementing a Markov chain language model and a Naiv
 
 The script expects two plain-text files in the project folder:
 
-- `blackpanther.txt`: the source text the language model is trained on.
-- `script.txt`: the comparison text the classifier is trained against.
+- `source.txt`: the text the language model is trained on, such as a movie script.
+- `comparison.txt`: a second text the classifier is trained against.
 
-Any two text files will work if you update the file names at the top of `markov_bayes.py`. The script saves the cleaned source text to `newblackpanther.txt`, generates one 1,000-character sentence for each starting letter, and classifies each one as coming from the source or the comparison text.
+The script saves the cleaned source text to `source_processed.txt`, generates one 1,000-character sentence for each starting letter, and classifies each one as coming from the source or the comparison text.
 
 ## Implementation Details
 
