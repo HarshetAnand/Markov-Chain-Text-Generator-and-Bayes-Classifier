@@ -1,6 +1,6 @@
 # Markov Chain Text Generator and Naive Bayes Classifier
 
-A from-scratch NLP project implementing a Markov chain language model and a Naive Bayes classifier. The Markov chain generates new sentences based on character-level probability distributions from a source text, while the classifier distinguishes between authentic and "fake" text based on character-level features.
+A from-scratch NLP project implementing a Markov chain language model and a Naive Bayes classifier. The Markov chain generates new sentences based on character-level probability distributions from a source text, while the classifier identifies which of two source texts a passage came from, based on character-level features.
 
 ## Features
 
@@ -41,7 +41,7 @@ The script saves the cleaned source text to `source_processed.txt`, generates on
 - Compares character-level probabilities between two source texts
 - Calculates log probabilities to avoid floating point underflow
 - Uses Bayes' theorem to compute posterior probabilities
-- Classifies generated sentences as belonging to source or "fake" text
+- Classifies generated sentences as belonging to the source or the comparison text
 
 ## Key Concepts Demonstrated
 
