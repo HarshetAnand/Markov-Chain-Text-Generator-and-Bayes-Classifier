@@ -6,7 +6,7 @@ A from-scratch NLP project implementing a Markov chain language model and a Naiv
 
 - Character-level Markov chain text generation
 - Unigram, bigram, and trigram probability models
-- Laplace smoothing for trigram probabilities
+- Laplace smoothing for bigram and trigram probabilities
 - Weighted random character selection based on probability distributions
 - Naive Bayes classifier for binary text classification
 - Bayesian posterior probability calculations
@@ -16,17 +16,28 @@ A from-scratch NLP project implementing a Markov chain language model and a Naiv
 
 - Python
 - NumPy
-- Standard library (collections, itertools, re, random)
+- Standard library (collections, itertools, re, random, string)
+
+## Data
+
+The script expects two plain-text files in the project folder:
+
+- `blackpanther.txt`: the source text the language model is trained on.
+- `script.txt`: the comparison text the classifier is trained against.
+
+Any two text files will work if you update the file names at the top of `markov_bayes.py`. The script saves the cleaned source text to `newblackpanther.txt`, generates one 1,000-character sentence for each starting letter, and classifies each one as coming from the source or the comparison text.
 
 ## Implementation Details
 
 **Markov Chain Generation:**
+
 - Preprocesses text (lowercase, alphabetic only, normalized spacing)
 - Builds unigram, bigram, and trigram probability tables
 - Generates new characters based on previous 1-2 characters using weighted random selection
 - Applies smoothing when bigram counts are zero
 
 **Naive Bayes Classification:**
+
 - Compares character-level probabilities between two source texts
 - Calculates log probabilities to avoid floating point underflow
 - Uses Bayes' theorem to compute posterior probabilities
