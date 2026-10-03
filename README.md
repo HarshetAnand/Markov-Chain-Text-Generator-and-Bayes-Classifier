@@ -34,7 +34,7 @@ Any two text files will work if you update the file names at the top of `markov_
 - Preprocesses text (lowercase, alphabetic only, normalized spacing)
 - Builds unigram, bigram, and trigram probability tables
 - Generates new characters based on previous 1-2 characters using weighted random selection
-- Applies smoothing when bigram counts are zero
+- Falls back to the bigram model when the previous two characters never appear together in the source text
 
 **Naive Bayes Classification:**
 
