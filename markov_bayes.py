@@ -23,9 +23,9 @@ import numpy as np
 
 # The script the language model is trained on, and a second script for the
 # classifier to tell it apart from.
-SCRIPT_FILE = 'blackpanther.txt'
-COMPARISON_FILE = 'script.txt'
-PROCESSED_FILE = 'newblackpanther.txt'
+SCRIPT_FILE = 'source.txt'
+COMPARISON_FILE = 'comparison.txt'
+PROCESSED_FILE = 'source_processed.txt'
 
 # Prior probability that a piece of text comes from each script.
 P_script = 0.85
