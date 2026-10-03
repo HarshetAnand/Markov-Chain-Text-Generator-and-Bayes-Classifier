@@ -1,16 +1,16 @@
-"""Character-level language model and Naive Bayes classifier for movie scripts.
+"""Character-level language model and Naive Bayes classifier for text.
 
-The script does two things with the text of a movie script:
+The program does two things with a source text:
 
 1. It builds unigram, bigram, and trigram models over 27 characters (the
    lowercase letters and the space) and uses them as a Markov chain to
    generate new text one character at a time.
-2. It builds a Naive Bayes classifier that decides which of two scripts a
-   piece of text came from, using only character frequencies and a prior
-   for each script.
+2. It builds a Naive Bayes classifier that decides which of two texts a
+   passage came from, using only character frequencies and a prior for
+   each text.
 
 The generated sentences are then run through the classifier to check that it
-attributes them to the script they were generated from.
+attributes them to the text they were generated from.
 """
 
 import random
@@ -21,14 +21,14 @@ from itertools import product
 
 import numpy as np
 
-# The script the language model is trained on, and a second script for the
+# The text the language model is trained on, and a second text for the
 # classifier to tell it apart from.
-SCRIPT_FILE = 'source.txt'
+SOURCE_FILE = 'source.txt'
 COMPARISON_FILE = 'comparison.txt'
 PROCESSED_FILE = 'source_processed.txt'
 
-# Prior probability that a piece of text comes from each script.
-P_script = 0.85
+# Prior probability that a passage comes from each text.
+P_source = 0.85
 P_comparison = 0.15
 
 # Length of each generated sentence, in characters.
@@ -57,7 +57,7 @@ def get_unigram_prob(data):
     return {ch: round(unigram[ch] / len(data), 4) for ch in allchar}
 
 
-with open(SCRIPT_FILE, encoding="utf-8") as f:
+with open(SOURCE_FILE, encoding="utf-8") as f:
     data = process_text(f.read())
 
 with open(PROCESSED_FILE, 'w') as f:
@@ -83,7 +83,7 @@ def ngram(data, n):
 
 
 unigram = Counter(data)
-script_unigram_prob = get_unigram_prob(data)
+source_unigram_prob = get_unigram_prob(data)
 comparison_unigram_prob = get_unigram_prob(comparison_data)
 
 # Bigram: probability of a character given the one before it. The second
@@ -132,8 +132,8 @@ def gen_sen(c, num):
     """Generate a sentence of num characters that starts with character c.
 
     Each new character is drawn from the trigram model. If the last two
-    characters never appear together in the script, the bigram model is used
-    for that step instead.
+    characters never appear together in the source text, the bigram model is
+    used for that step instead.
     """
     res = c + gen_bi(c)
     for i in range(num - 2):
@@ -154,29 +154,29 @@ sentences = [gen_sen(char, num_characters) for char in string.ascii_lowercase]
 # ---------------------------------------------------------------------------
 
 # Posterior probability that a single character came from the comparison
-# script, by Bayes' rule:
+# text, by Bayes' rule:
 #   P(comparison | char) = P(char | comparison) * P(comparison) / P(char)
 posterior_probs = []
 for char in allchar:
-    P_char = (P_script * script_unigram_prob[char]
+    P_char = (P_source * source_unigram_prob[char]
               + P_comparison * comparison_unigram_prob[char])
     P_comparison_given_char = (comparison_unigram_prob[char] * P_comparison) / P_char
     posterior_probs.append(round(P_comparison_given_char, 4))
 
 
 def classify(sentence):
-    """Return 0 if the sentence is more likely from the script, 1 otherwise.
+    """Return 0 if the sentence is more likely from the source, 1 otherwise.
 
     Characters are treated as independent given the source. Log probabilities
     are summed rather than multiplying probabilities, which would underflow
     on a sentence this long.
     """
-    log_prob_script = np.log(P_script)
+    log_prob_source = np.log(P_source)
     log_prob_comparison = np.log(P_comparison)
     for char in sentence:
-        log_prob_script += np.log(script_unigram_prob[char])
+        log_prob_source += np.log(source_unigram_prob[char])
         log_prob_comparison += np.log(comparison_unigram_prob[char])
-    return 0 if log_prob_script > log_prob_comparison else 1
+    return 0 if log_prob_source > log_prob_comparison else 1
 
 
 predictions = [classify(sentence) for sentence in sentences]
@@ -190,8 +190,8 @@ def print_unigram_prob(unigram_prob_dict):
     print(', '.join(f"{unigram_prob_dict[ch]:.4f}" for ch in allchar))
 
 
-print(f"Unigram probabilities for {SCRIPT_FILE}:")
-print_unigram_prob(script_unigram_prob)
+print(f"Unigram probabilities for {SOURCE_FILE}:")
+print_unigram_prob(source_unigram_prob)
 
 # One row per first character, one column per second character.
 print("\nBigram transition probabilities, without smoothing:")
@@ -213,5 +213,5 @@ print(f"\nPosterior probability of {COMPARISON_FILE} given each character:")
 print(', '.join(f"{prob:.4f}" for prob in posterior_probs))
 
 print(f"\nPredicted source of each generated sentence "
-      f"(0 = {SCRIPT_FILE}, 1 = {COMPARISON_FILE}):")
+      f"(0 = {SOURCE_FILE}, 1 = {COMPARISON_FILE}):")
 print(predictions)
