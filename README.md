@@ -22,7 +22,7 @@ A from-scratch NLP project implementing a Markov chain language model and a Naiv
 
 The script expects two plain-text files in the project folder:
 
-- `source.txt`: the text the language model is trained on, such as a movie script.
+- `source.txt`: the text the language model is trained on.
 - `comparison.txt`: a second text the classifier is trained against.
 
 The script saves the cleaned source text to `source_processed.txt`, generates one 1,000-character sentence for each starting letter, and classifies each one as coming from the source or the comparison text.
